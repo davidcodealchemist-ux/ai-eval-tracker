@@ -1,7 +1,7 @@
 'use client'
 
 import { createClient } from '@/utils/supabase/client'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
 import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts'
 
@@ -44,11 +44,7 @@ export default function AnalyticsPage() {
   const supabase = createClient()
   const router = useRouter()
 
-  useEffect(() => {
-    loadAnalytics()
-  }, [])
-
-  async function loadAnalytics() {
+  const loadAnalytics = useCallback(async () => {
     setLoading(true)
     const { data: { user } } = await supabase.auth.getUser()
     if (!user) {
@@ -133,7 +129,11 @@ export default function AnalyticsPage() {
       topFlags
     })
     setLoading(false)
-  }
+  }, [supabase, router])
+
+  useEffect(() => {
+    loadAnalytics()
+  }, [loadAnalytics])
 
   return (
     <div className="min-h-screen bg-gray-900 p-8">

@@ -1,4 +1,4 @@
- 'use client'
+'use client'
 
 import { createClient } from '@/utils/supabase/client'
 import { useRouter } from 'next/navigation'
@@ -74,8 +74,8 @@ export default function LoginPage() {
           </button>
         </form>
 
-        <p className="text-gray-400 text-center mt-4">
-          Don't have an account?{' '}
+        <p className="text-sm text-gray-400 mt-4">
+          Don&apos;t have an account?{' '}
           <a href="/signup" className="text-blue-500 hover:underline">
             Sign up
           </a>

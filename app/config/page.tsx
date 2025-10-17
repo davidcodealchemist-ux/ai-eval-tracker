@@ -1,7 +1,7 @@
 'use client'
 
 import { createClient } from '@/utils/supabase/client'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
 
 export default function ConfigPage() {
@@ -16,11 +16,7 @@ export default function ConfigPage() {
   const supabase = createClient()
   const router = useRouter()
 
-  useEffect(() => {
-    loadConfig()
-  }, [])
-
-  async function loadConfig() {
+  const loadConfig = useCallback(async () => {
     const { data: { user } } = await supabase.auth.getUser()
     if (!user) {
       router.push('/login')
@@ -36,7 +32,11 @@ export default function ConfigPage() {
     if (data) {
       setConfig(data)
     }
-  }
+  }, [supabase, router])
+
+  useEffect(() => {
+    loadConfig()
+  }, [loadConfig])
 
   async function saveConfig(e: React.FormEvent) {
     e.preventDefault()
@@ -141,4 +141,3 @@ export default function ConfigPage() {
     </div>
   )
 }
-

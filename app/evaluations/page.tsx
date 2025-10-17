@@ -1,11 +1,22 @@
 'use client'
 
 import { createClient } from '@/utils/supabase/client'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
 
+interface Evaluation {
+  id: string
+  interaction_id: string
+  prompt: string
+  response: string
+  score: number
+  latency_ms: number
+  created_at: string
+  flags: string[]
+}
+
 export default function EvaluationsPage() {
-  const [evaluations, setEvaluations] = useState<any[]>([])
+  const [evaluations, setEvaluations] = useState<Evaluation[]>([])
   const [loading, setLoading] = useState(true)
   const [page, setPage] = useState(1)
   const [totalCount, setTotalCount] = useState(0)
@@ -13,11 +24,7 @@ export default function EvaluationsPage() {
   const supabase = createClient()
   const router = useRouter()
 
-  useEffect(() => {
-    loadEvaluations()
-  }, [page])
-
-  async function loadEvaluations() {
+  const loadEvaluations = useCallback(async () => {
     setLoading(true)
     const { data: { user } } = await supabase.auth.getUser()
     if (!user) {
@@ -28,7 +35,7 @@ export default function EvaluationsPage() {
     const from = (page - 1) * pageSize
     const to = from + pageSize - 1
 
-    const { data, error, count } = await supabase
+    const { data, count } = await supabase
       .from('evaluations')
       .select('*', { count: 'exact' })
       .eq('user_id', user.id)
@@ -40,7 +47,11 @@ export default function EvaluationsPage() {
       setTotalCount(count || 0)
     }
     setLoading(false)
-  }
+  }, [page, supabase, router])
+
+  useEffect(() => {
+    loadEvaluations()
+  }, [loadEvaluations])
 
   const totalPages = Math.ceil(totalCount / pageSize)
 
