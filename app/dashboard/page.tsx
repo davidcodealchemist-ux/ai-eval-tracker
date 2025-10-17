@@ -198,7 +198,7 @@ export default async function DashboardPage() {
           <div className="absolute inset-0 bg-gradient-to-r from-blue-500/10 via-purple-500/10 to-pink-500/10 animate-pulse"></div>
           <div className="relative z-10">
             <h1 className="text-4xl md:text-5xl font-bold text-white mb-2">
-              Welcome back! 👋
+              Welcome back! 
             </h1>
             <p className="text-gray-300 text-lg">
               Here&apos;s your AI evaluation performance overview
